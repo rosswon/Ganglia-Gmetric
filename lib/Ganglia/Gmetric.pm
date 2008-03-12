@@ -1,5 +1,5 @@
 package Ganglia::Gmetric;
-$VERSION=0.2;
+$VERSION=0.3;
 use strict;
 use base qw(Class::Accessor);
 use IO::CaptureOutput qw/capture/;
@@ -53,6 +53,7 @@ sub new {
 	return $self;
 }
 __PACKAGE__->mk_accessors(qw[name value type path units channel port iface ttl]);
+__PACKAGE__->mk_ro_accessors(qw[command]);
 
 =head2 run
 
@@ -71,6 +72,8 @@ sub run {
 	if ($self->{port}){$command.=" -p $self->{port}"}
 	if ($self->{iface}){$command.=" -i $self->{iface}"}
 	if ($self->{ttl}){$command.=" -l $self->{ttl}"}
+	$self->{command}=$command;
+	print $self->command;
 	capture sub {
 		system($command);
 	} => $stdout, $stderr;
